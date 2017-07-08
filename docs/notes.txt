@@ -1,0 +1,14 @@
+-------------
+MUSIFY
+-------------
+
+Comandos:
+- Cambiar a una base de datos: use [Nombre de la base de datos];
+- Crear colección: db.[Nombre de la colección].save([Objeto a guardar]);
+- Obtener todos los registros: db.[Nombre de la colección].find();
+- Mostrar todas las bases de datos: show dbs
+
+Configuración:
+
+Base de datos:
+- Nombre: musify
