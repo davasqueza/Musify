@@ -1,18 +1,20 @@
 module.exports = (function () {
     "use strict";
 
+    var _ = require("lodash");
     var await = require("asyncawait/await");
     var bluebird = require("bluebird");
-    var bcript = bluebird.promisifyAll(require("bcrypt-nodejs"));
-    var _ = require("lodash");
-    var User = bluebird.promisifyAll(require("../models/user"));
+    var utils = require("../utils/utils");
     var jwt = require("../services/jwt");
+    var bcript = bluebird.promisifyAll(require("bcrypt-nodejs"));
+    var User = bluebird.promisifyAll(require("../models/user"));
 
     var UserController = {};
     UserController.saveUser = saveUser;
     UserController.loginUser = loginUser;
+    UserController.updateUser = updateUser;
 
-    return UserController;
+    return utils.preprocessAllHandlers(UserController);
 
     function saveUser(request) {
         var user = new User();
@@ -88,7 +90,7 @@ module.exports = (function () {
         if(passwordMatch){
             result.status = 200;
             result.payload.message = "Login successful";
-            result.payload.user = _.pick(user, ["name", "surname", "email", "role", "image"]);
+            result.payload.user = _.pick(user, ["_id", "name", "surname", "email", "role", "image"]);
             if(params.getHash){
                 result.payload.token = jwt.createToken(user);
             }
@@ -99,6 +101,44 @@ module.exports = (function () {
             result.payload.message = "Wrong password";
             return result;
         }
+    }
+
+    function updateUser(request) {
+        var result = {payload: {}};
+        var params = request.body;
+        var userID = request.params.id;
+
+        if(_.isEmpty(params)){
+            result.status = 400;
+            result.payload.message = "Invalid request";
+            result.payload.error = "Empty payload";
+            return result;
+        }
+
+        request.checkBody("email", "Parameter 'email' must have a valid format").optional().isEmail();
+        request.checkParams("id", "Parameter 'id' is required").notEmpty();
+
+        var validationsResult = await(request.getValidationResult());
+
+        if (!validationsResult.isEmpty()){
+            result.status = 400;
+            result.payload.message = "Invalid request";
+            result.payload.error = validationsResult.array();
+            return result;
+        }
+
+        var user = await(User.findByIdAndUpdateAsync(userID, params));
+
+        if(!user){
+            result.status = 404;
+            result.payload.message = "User not found";
+        }
+        else{
+            result.status = 200;
+            result.payload.message = "User updated successfully";
+        }
+
+        return result;
     }
 
 })();
