@@ -6,6 +6,7 @@ module.exports = (function () {
     var bcript = bluebird.promisifyAll(require("bcrypt-nodejs"));
     var _ = require("lodash");
     var User = bluebird.promisifyAll(require("../models/user"));
+    var jwt = require("../services/jwt");
 
     var UserController = {};
     UserController.saveUser = saveUser;
@@ -56,12 +57,14 @@ module.exports = (function () {
     }
 
     function loginUser(request) {
-        var params = request.body;
         var result = {payload: {}};
 
         request.checkBody("email", "Parameter 'email' is required").notEmpty()
             .isEmail().withMessage("Parameter 'email' must have a valid format");
         request.checkBody("password", "Parameter 'password' is required").notEmpty();
+        request.sanitizeBody('getHash').toBoolean();
+
+        var params = request.body;
 
         var validationsResult = await(request.getValidationResult());
 
@@ -85,7 +88,10 @@ module.exports = (function () {
         if(passwordMatch){
             result.status = 200;
             result.payload.message = "Login successful";
-            result.payload.user = user;
+            result.payload.user = _.pick(user, ["name", "surname", "email", "role", "image"]);
+            if(params.getHash){
+                result.payload.token = jwt.createToken(user);
+            }
             return result;
         }
         else{

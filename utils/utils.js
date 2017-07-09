@@ -19,7 +19,7 @@ module.exports = (function () {
 
             procededRequest.catch(function (error) {
                 response.status(500);
-                response.send({message: "Unable to process your request", error: error});
+                response.send({message: "Unable to process your request", error: error.name + ": " + error.message});
 
             });
         };
