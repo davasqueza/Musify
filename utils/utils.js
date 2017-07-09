@@ -7,6 +7,7 @@ module.exports = (function () {
     var utils = {};
     utils.processRequest = processRequest;
     utils.preprocessAllHandlers = preprocessAllHandlers;
+    utils.buildInvalidRequestResponse = buildInvalidRequestResponse;
 
     return utils;
 
@@ -27,6 +28,14 @@ module.exports = (function () {
 
             });
         };
+    }
+
+    function buildInvalidRequestResponse(validationsResult) {
+        var result = {payload: {}};
+        result.status = 400;
+        result.payload.message = "Invalid request";
+        result.payload.error = validationsResult.array();
+        return result;
     }
 
     function preprocessAllHandlers(handlers) {

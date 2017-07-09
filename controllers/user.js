@@ -35,10 +35,7 @@ module.exports = (function () {
         var validationsResult = await(request.getValidationResult());
 
         if (!validationsResult.isEmpty()){
-            result.status = 400;
-            result.payload.message = "Invalid request";
-            result.payload.error = validationsResult.array();
-            return result;
+            return utils.buildInvalidRequestResponse(validationsResult);
         }
 
         user.name = params.name;
@@ -77,10 +74,7 @@ module.exports = (function () {
         var validationsResult = await(request.getValidationResult());
 
         if (!validationsResult.isEmpty()){
-            result.status = 400;
-            result.payload.message = "Invalid request";
-            result.payload.error = validationsResult.array();
-            return result;
+            return utils.buildInvalidRequestResponse(validationsResult);
         }
 
         var user = await(User.findOneAsync({email: params.email}));
@@ -127,10 +121,7 @@ module.exports = (function () {
         var validationsResult = await(request.getValidationResult());
 
         if (!validationsResult.isEmpty()){
-            result.status = 400;
-            result.payload.message = "Invalid request";
-            result.payload.error = validationsResult.array();
-            return result;
+            return utils.buildInvalidRequestResponse(validationsResult);
         }
 
         var user = await(User.findByIdAndUpdateAsync(userID, params));
@@ -158,10 +149,7 @@ module.exports = (function () {
         var validationsResult = await(request.getValidationResult());
 
         if (!validationsResult.isEmpty()){
-            result.status = 400;
-            result.payload.message = "Invalid request";
-            result.payload.error = validationsResult.array();
-            return result;
+            return utils.buildInvalidRequestResponse(validationsResult);
         }
 
         if(_.isEmpty(files) || _.isUndefined(files.image)){
@@ -208,10 +196,7 @@ module.exports = (function () {
         var validationsResult = await(request.getValidationResult());
 
         if (!validationsResult.isEmpty()) {
-            result.status = 400;
-            result.payload.message = "Invalid request";
-            result.payload.error = validationsResult.array();
-            return result;
+            return utils.buildInvalidRequestResponse(validationsResult);
         }
 
         var imagePath = path.resolve(uploadDir + imageFile);
