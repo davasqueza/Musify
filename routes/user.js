@@ -13,6 +13,7 @@ module.exports = (function () {
     api.post("/login", UserController.loginUser);
     api.put("/updateUser/:id", AuthenticatedMiddleware, UserController.updateUser);
     api.post("/uploadUserImage/:id", [AuthenticatedMiddleware, UploadMiddleware], UserController.updateImage);
+    api.get("/getUserImage/:imageFile", UserController.getImage);
 
     return api;
 })();

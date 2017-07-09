@@ -11,11 +11,14 @@ module.exports = (function () {
     var User = bluebird.promisifyAll(require("../models/user"));
     var fs = require("fs-extra");
 
+    var uploadDir = process.env.UPLOADDIR || "./uploads/users/";
+
     var UserController = {};
     UserController.saveUser = saveUser;
     UserController.loginUser = loginUser;
     UserController.updateUser = updateUser;
     UserController.updateImage = updateImage;
+    UserController.getImage = getImage;
 
     return utils.preprocessAllHandlers(UserController);
 
@@ -148,7 +151,7 @@ module.exports = (function () {
         var result = {payload: {}};
         var files = request.files;
         var userID = request.params.id;
-        var filePath, fileName, fileExtension, user, uploadDir;
+        var filePath, fileName, fileExtension, user;
 
         request.checkParams("id", "Parameter 'id' is required").notEmpty();
 
@@ -189,7 +192,6 @@ module.exports = (function () {
             result.payload.message = "User updated successfully";
         }
 
-        uploadDir = process.env.UPLOADDIR || "./uploads/users/";
         fs.remove(uploadDir + user.image).catch(function (error) {
             console.log("Unable to remove old profile image of user "+user._id, error);
         });
@@ -197,4 +199,30 @@ module.exports = (function () {
         return result;
     }
 
+    function getImage(request, response) {
+        var result = {payload: {}};
+        var imageFile = request.params.imageFile;
+
+        request.checkParams("imageFile", "Parameter 'imageFile' is required").notEmpty();
+
+        var validationsResult = await(request.getValidationResult());
+
+        if (!validationsResult.isEmpty()) {
+            result.status = 400;
+            result.payload.message = "Invalid request";
+            result.payload.error = validationsResult.array();
+            return result;
+        }
+
+        var imagePath = path.resolve(uploadDir + imageFile);
+        var image = await(fs.exists(imagePath));
+
+        if (!image) {
+            result.status = 404;
+            result.payload.message = "Image not found";
+        }
+
+        response.status(200);
+        response.sendFile(imagePath);
+    }
 })();
