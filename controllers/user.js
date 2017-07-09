@@ -4,15 +4,18 @@ module.exports = (function () {
     var _ = require("lodash");
     var await = require("asyncawait/await");
     var bluebird = require("bluebird");
+    var path = require('path');
     var utils = require("../utils/utils");
     var jwt = require("../services/jwt");
     var bcript = bluebird.promisifyAll(require("bcrypt-nodejs"));
     var User = bluebird.promisifyAll(require("../models/user"));
+    var fs = require("fs-extra");
 
     var UserController = {};
     UserController.saveUser = saveUser;
     UserController.loginUser = loginUser;
     UserController.updateUser = updateUser;
+    UserController.updateImage = updateImage;
 
     return utils.preprocessAllHandlers(UserController);
 
@@ -137,6 +140,59 @@ module.exports = (function () {
             result.status = 200;
             result.payload.message = "User updated successfully";
         }
+
+        return result;
+    }
+
+    function updateImage(request) {
+        var result = {payload: {}};
+        var files = request.files;
+        var userID = request.params.id;
+        var filePath, fileName, fileExtension, user, uploadDir;
+
+        request.checkParams("id", "Parameter 'id' is required").notEmpty();
+
+        var validationsResult = await(request.getValidationResult());
+
+        if (!validationsResult.isEmpty()){
+            result.status = 400;
+            result.payload.message = "Invalid request";
+            result.payload.error = validationsResult.array();
+            return result;
+        }
+
+        if(_.isEmpty(files) || _.isUndefined(files.image)){
+            result.status = 400;
+            result.payload.message = "File 'image' is required";
+            return result;
+        }
+
+        filePath = files.image.path;
+        fileExtension = path.extname(filePath);
+        fileName = path.basename(filePath);
+        var acceptedFormats = [".jpg", ".png", ".gif"];
+
+        if(_.indexOf(acceptedFormats, fileExtension) === -1){
+            result.status = 415;
+            result.payload.message = "Extension '"+fileExtension+"' is currently not supported by the server";
+            return result;
+        }
+
+        user = await(User.findByIdAndUpdateAsync(userID, {image: fileName}));
+
+        if(!user){
+            result.status = 404;
+            result.payload.message = "User not found";
+        }
+        else{
+            result.status = 200;
+            result.payload.message = "User updated successfully";
+        }
+
+        uploadDir = process.env.UPLOADDIR || "./uploads/users/";
+        fs.remove(uploadDir + user.image).catch(function (error) {
+            console.log("Unable to remove old profile image of user "+user._id, error);
+        });
 
         return result;
     }

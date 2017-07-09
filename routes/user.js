@@ -2,14 +2,17 @@ module.exports = (function () {
     "use strict";
 
     var express = require("express");
-    var AuthenticatedMiddleware = require("../middlewares/authenticated");
+    var multipart = require("connect-multiparty");
     var UserController = require("../controllers/user");
+    var AuthenticatedMiddleware = require("../middlewares/authenticated").ensureAuth;
+    var UploadMiddleware = multipart({uploadDir: process.env.UPLOADDIR || "./uploads/users"});
 
     var api = express.Router();
 
     api.post("/saveUser", UserController.saveUser);
-    api.post("/updateUser/:id", AuthenticatedMiddleware.ensureAuth, UserController.updateUser);
     api.post("/login", UserController.loginUser);
+    api.put("/updateUser/:id", AuthenticatedMiddleware, UserController.updateUser);
+    api.post("/uploadUserImage/:id", [AuthenticatedMiddleware, UploadMiddleware], UserController.updateImage);
 
     return api;
 })();
