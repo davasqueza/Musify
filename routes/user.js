@@ -2,10 +2,11 @@ module.exports = (function () {
     "use strict";
 
     var express = require("express");
+    var constants = require("../constants");
     var multipart = require("connect-multiparty");
     var UserController = require("../controllers/user");
     var AuthenticatedMiddleware = require("../middlewares/authenticated").ensureAuth;
-    var UploadMiddleware = multipart({uploadDir: process.env.UPLOADDIR || "./uploads/users"});
+    var UploadMiddleware = multipart({uploadDir: constants.USER_UPLOAD_DIR});
 
     var api = express.Router();
 

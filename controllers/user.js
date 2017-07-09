@@ -2,16 +2,15 @@ module.exports = (function () {
     "use strict";
 
     var _ = require("lodash");
-    var await = require("asyncawait/await");
-    var bluebird = require("bluebird");
     var path = require('path');
-    var utils = require("../utils/utils");
-    var jwt = require("../services/jwt");
-    var bcript = bluebird.promisifyAll(require("bcrypt-nodejs"));
-    var User = bluebird.promisifyAll(require("../models/user"));
     var fs = require("fs-extra");
-
-    var uploadDir = process.env.UPLOADDIR || "./uploads/users/";
+    var bluebird = require("bluebird");
+    var jwt = require("../services/jwt");
+    var utils = require("../utils/utils");
+    var await = require("asyncawait/await");
+    var constanst = require("../constants");
+    var User = bluebird.promisifyAll(require("../models/user"));
+    var bcript = bluebird.promisifyAll(require("bcrypt-nodejs"));
 
     var UserController = {};
     UserController.saveUser = saveUser;
@@ -180,7 +179,7 @@ module.exports = (function () {
             result.payload.message = "User updated successfully";
         }
 
-        fs.remove(uploadDir + user.image).catch(function (error) {
+        fs.remove(constanst.USER_UPLOAD_DIR + user.image).catch(function (error) {
             console.log("Unable to remove old profile image of user "+user._id, error);
         });
 
@@ -199,7 +198,7 @@ module.exports = (function () {
             return utils.buildInvalidRequestResponse(validationsResult);
         }
 
-        var imagePath = path.resolve(uploadDir + imageFile);
+        var imagePath = path.resolve(constanst.USER_UPLOAD_DIR + imageFile);
         var image = await(fs.exists(imagePath));
 
         if (!image) {
