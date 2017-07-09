@@ -9,6 +9,13 @@ Comandos:
 - Mostrar todas las bases de datos: show dbs
 
 Configuración:
+- Puerto API: 3977
+- Puerto DB: 27017
+
+Usuarios:
+- U: admin@musify.com / P: 123456
+- U: contact@musify.com / P: 654321
+- U: diego@correo.com / P: 123456
 
 Base de datos:
 - Nombre: musify

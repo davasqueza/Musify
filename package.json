@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "saveUser": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -27,11 +27,15 @@
     "body-parser": "^1.17.2",
     "connect-multiparty": "^2.0.0",
     "express": "^4.15.3",
+    "express-validator": "^3.2.0",
     "fs-extra": "^3.0.1",
+    "install": "^0.10.1",
     "jwt-simple": "^0.5.1",
+    "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "mongoose": "^4.11.1",
-    "mongoose-pagination": "^1.0.0"
+    "mongoose-pagination": "^1.0.0",
+    "npm": "^5.1.0"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
