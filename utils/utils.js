@@ -2,19 +2,23 @@ module.exports = (function () {
     "use strict";
 
     var async = require("asyncawait/async");
+    var _ = require("lodash");
 
     var utils = {};
     utils.processRequest = processRequest;
+    utils.preprocessAllHandlers = preprocessAllHandlers;
 
     return utils;
 
     function processRequest(handler) {
-        return function (request, response) {
-            var procededRequest = async(handler)(request, response);
+        return function (request, response, next) {
+            var procededRequest = async(handler)(request, response, next);
 
             procededRequest.then(function (result) {
-                response.status(result.status);
-                response.send(result.payload);
+                if(result){
+                    response.status(result.status);
+                    response.send(result.payload);
+                }
             });
 
             procededRequest.catch(function (error) {
@@ -23,5 +27,9 @@ module.exports = (function () {
 
             });
         };
+    }
+
+    function preprocessAllHandlers(handlers) {
+        return _.mapValues(handlers, processRequest);
     }
 })();
