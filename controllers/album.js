@@ -12,21 +12,20 @@ module.exports = (function () {
     
     var Song = require("../models/song");
     var Album = require("../models/album");
-    var Artist = require("../models/artist");
 
-    var ArtistController = {};
-    ArtistController.getArtistList = getArtistList;
-    ArtistController.getArtist = getArtist;
-    ArtistController.saveArtist = saveArtist;
-    ArtistController.updateArtist = updateArtist;
-    ArtistController.deleteArtist = deleteArtist;
+    var AlbumController = {};
+    AlbumController.getAlbumList = getAlbumList;
+    AlbumController.getAlbum = getAlbum;
+    AlbumController.saveAlbum = saveAlbum;
+    AlbumController.updateAlbum = updateAlbum;
+    AlbumController.deleteAlbum = deleteAlbum;
 
-    ArtistController.updateImage = updateImage;
-    ArtistController.getImage = getImage;
+    AlbumController.updateImage = updateImage;
+    AlbumController.getImage = getImage;
 
-    return utils.preprocessAllHandlers(ArtistController);
+    return utils.preprocessAllHandlers(AlbumController);
 
-    function getArtistList(request, response) {
+    function getAlbumList(request, response) {
         var result = {payload: {}};
         var page = request.params.page ? request.params.page : 1;
         var itemsPerPage = 5;
@@ -34,33 +33,33 @@ module.exports = (function () {
         var options = {
             page: page,
             limit: itemsPerPage,
-            sort: {name: -1}
+            sort: {title: -1}
         };
 
         var startRange = itemsPerPage * (page - 1);
         var finishRange = startRange + itemsPerPage;
 
-        var artists = await(Artist.paginate(query, options));
+        var albums = await(Album.paginate(query, options));
 
-        if(artists.total < startRange){
+        if(albums.total < startRange){
             result.status = 416;
             result.payload.message = "Requested page not found";
-            response.header("Content-Range", "resources */"+artists.total);
+            response.header("Content-Range", "resources */"+albums.total);
         }
         else{
             result.status = 206;
-            result.payload.message = "Artists list loaded successfully";
-            result.payload.artists = artists.docs;
-            finishRange = finishRange < artists.total ? finishRange : artists.total;
-            response.header("Content-Range", "resources "+startRange+"-"+finishRange+"/"+artists.total);
+            result.payload.message = "Albums list loaded successfully";
+            result.payload.albums = albums.docs;
+            finishRange = finishRange < albums.total ? finishRange : albums.total;
+            response.header("Content-Range", "resources "+startRange+"-"+finishRange+"/"+albums.total);
         }
 
         return result;
     }
 
-    function getArtist(request) {
+    function getAlbum(request) {
         var result = {payload: {}};
-        var artistID = request.params.id;
+        var albumID = request.params.id;
 
         request.checkParams("id", "Parameter 'id' is required").notEmpty();
 
@@ -70,28 +69,30 @@ module.exports = (function () {
             return utils.buildInvalidRequestResponse(validationsResult);
         }
 
-        var artist = await(Artist.findById(artistID));
+        var album = await(Album.findById(albumID));
 
-        if(!artist){
+        if(!album){
             result.status = 404;
-            result.payload.message = "Artist not found";
+            result.payload.message = "Album not found";
         }
         else{
             result.status = 200;
-            result.payload.message = "Artist loaded successfully";
-            result.payload.artist = artist
+            result.payload.message = "Album loaded successfully";
+            result.payload.album = album
         }
 
         return result;
     }
 
-    function saveArtist(request) {
-        var artist = new Artist();
+    function saveAlbum(request) {
+        var album = new Album();
         var params = request.body;
         var result = {payload: {}};
 
-        request.checkBody("name", "Parameter 'name' is required").notEmpty();
+        request.checkBody("title", "Parameter 'name' is required").notEmpty();
         request.checkBody("description", "Parameter 'description' is required").notEmpty();
+        request.checkBody("year", "Parameter 'year' must be an integer").isInt();
+        request.checkBody("artist", "Parameter 'artist' is required").notEmpty();
 
         var validationsResult = await(request.getValidationResult());
 
@@ -99,28 +100,29 @@ module.exports = (function () {
             return utils.buildInvalidRequestResponse(validationsResult);
         }
 
-        artist.name = params.name;
-        artist.description = params.description;
-        artist.image = "null";
+        album.description = params.description;
+        album.year = params.year;
+        album.artist = params.artist;
+        album.image = "null";
 
-        var artistStored = await(artist.save());
+        var albumStored = await(album.save());
 
-        if(_.isUndefined(artistStored)){
+        if(_.isUndefined(albumStored)){
             result.status = 500;
-            result.payload.message = "Unable to save artist data";
+            result.payload.message = "Unable to save album data";
             return result;
         }
 
         result.status = 200;
-        result.payload.message = "Artist saved successfully";
-        result.payload.artist = artist;
+        result.payload.message = "Album saved successfully";
+        result.payload.album = album;
         return result;
     }
 
-    function updateArtist(request) {
+    function updateAlbum(request) {
         var result = {payload: {}};
         var params = request.body;
-        var artistID = request.params.id;
+        var albumID = request.params.id;
 
         if(_.isEmpty(params)){
             result.status = 400;
@@ -129,24 +131,24 @@ module.exports = (function () {
             return result;
         }
 
-        var artist = await(Artist.findByIdAndUpdate(artistID, params));
+        var album = await(Album.findByIdAndUpdate(albumID, params));
 
-        if(!artist){
+        if(!album){
             result.status = 404;
-            result.payload.message = "Artist not found";
+            result.payload.message = "Album not found";
         }
         else{
             result.status = 200;
-            result.payload.message = "Artist updated successfully";
+            result.payload.message = "Album updated successfully";
         }
 
         return result;
     }
 
-    function deleteArtist(request) {
+    function deleteAlbum(request) {
         var result = {payload: {}};
         var task = Fawn.Task();
-        var artistID = request.params.id;
+        var albumID = request.params.id;
 
         request.checkParams("id", "Parameter 'id' is required").notEmpty();
 
@@ -156,19 +158,16 @@ module.exports = (function () {
             return utils.buildInvalidRequestResponse(validationsResult);
         }
 
-        var artist = await(Artist.findById(artistID));
-        var albums = await(Album.find({artist: artistID}));
-        var albumsID = _.map(albums, _.property("_id"));
-        var songs = await(Song.find({album:{$in: albumsID}}));
+        var album = await(Album.findById(albumID));
+        var songs = await(Song.find({album: albumID}));
 
-        task.remove(artist);
-        _.each(albums, task.remove);
+        task.remove(album);
         _.each(songs, task.remove);
 
         await(task.run());
 
         result.status = 200;
-        result.payload.message = "Artist deleted successfully";
+        result.payload.message = "Album deleted successfully";
 
         return result;
     }
@@ -176,8 +175,8 @@ module.exports = (function () {
     function updateImage(request) {
         var result = {payload: {}};
         var files = request.files;
-        var artistID = request.params.id;
-        var filePath, fileName, fileExtension, artist;
+        var albumID = request.params.id;
+        var filePath, fileName, fileExtension, album;
 
         request.checkParams("id", "Parameter 'id' is required").notEmpty();
 
@@ -204,19 +203,19 @@ module.exports = (function () {
             return result;
         }
 
-        artist = await(Artist.findByIdAndUpdate(artistID, {image: fileName}));
+        album = await(Album.findByIdAndUpdate(albumID, {image: fileName}));
 
-        if(!artist){
+        if(!album){
             result.status = 404;
-            result.payload.message = "Artist not found";
+            result.payload.message = "Album not found";
         }
         else{
             result.status = 200;
-            result.payload.message = "Artist updated successfully";
+            result.payload.message = "Album updated successfully";
         }
 
-        fs.remove(constants.ARTIST_UPLOAD_DIR + artist.image).catch(function (error) {
-            console.log("Unable to remove old profile image of artist "+artist._id, error);
+        fs.remove(constants.ALBUM_UPLOAD_DIR + album.image).catch(function (error) {
+            console.log("Unable to remove old profile image of album "+album._id, error);
         });
 
         return result;
@@ -234,7 +233,7 @@ module.exports = (function () {
             return utils.buildInvalidRequestResponse(validationsResult);
         }
 
-        var imagePath = path.resolve(constants.ARTIST_UPLOAD_DIR + imageFile);
+        var imagePath = path.resolve(constants.ALBUM_UPLOAD_DIR + imageFile);
         var image = await(fs.exists(imagePath));
 
         if (!image) {

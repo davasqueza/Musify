@@ -2,6 +2,7 @@ module.exports = (function () {
     "use strict";
 
     var mongoose = require("mongoose");
+    var mongoosePaginate = require("mongoose-paginate");
     var Schema = mongoose.Schema;
 
     var AlbumSchema = Schema({
@@ -14,6 +15,8 @@ module.exports = (function () {
             ref: "Artist"
         }
     });
+
+    AlbumSchema.plugin(mongoosePaginate);
 
     return mongoose.model("Album", AlbumSchema);
 })();
