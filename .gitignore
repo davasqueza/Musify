@@ -3,4 +3,4 @@
 # IntelliJ project files
 .idea
 /node_modules/
-/uploads/users/*.[jpg][png][gif]
+/uploads/*/*.[jpg][png][gif]

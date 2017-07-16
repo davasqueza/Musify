@@ -16,7 +16,10 @@ module.exports = (function () {
 
     //Application routes
     var UserRoutes = require("./routes/user");
+    var ArtistRoutes = require("./routes/artist");
+
     app.use("/api", UserRoutes);
+    app.use("/api", ArtistRoutes);
 
     return app;
 })();

@@ -4,6 +4,7 @@
     var bluebird = require('bluebird');
     var mongoose = require("mongoose");
     var fs = require("fs-extra");
+    var Fawn = require("fawn");
     var app = require("./app");
     var constants = require("./constants");
 
@@ -24,10 +25,13 @@
         databaseConnection.catch(function () {
             console.log("Unable to connect to database:");
         });
+
+        Fawn.init(mongoose);
     }
 
     function ensureUploadFolders() {
         fs.ensureDirSync(constants.USER_UPLOAD_DIR);
+        fs.ensureDirSync(constants.ARTIST_UPLOAD_DIR);
     }
 
     function listenConnections() {
