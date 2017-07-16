@@ -9,7 +9,7 @@ module.exports = (function () {
     var utils = require("../utils/utils");
     var await = require("asyncawait/await");
     var constanst = require("../constants");
-    var User = bluebird.promisifyAll(require("../models/user"));
+    var User = require("../models/user");
     var bcript = bluebird.promisifyAll(require("bcrypt-nodejs"));
 
     var UserController = {};
@@ -76,7 +76,7 @@ module.exports = (function () {
             return utils.buildInvalidRequestResponse(validationsResult);
         }
 
-        var user = await(User.findOneAsync({email: params.email}));
+        var user = await(User.findOne({email: params.email}));
 
         if(!user){
             result.status = 404;
@@ -123,7 +123,7 @@ module.exports = (function () {
             return utils.buildInvalidRequestResponse(validationsResult);
         }
 
-        var user = await(User.findByIdAndUpdateAsync(userID, params));
+        var user = await(User.findByIdAndUpdate(userID, params));
 
         if(!user){
             result.status = 404;
@@ -168,7 +168,7 @@ module.exports = (function () {
             return result;
         }
 
-        user = await(User.findByIdAndUpdateAsync(userID, {image: fileName}));
+        user = await(User.findByIdAndUpdate(userID, {image: fileName}));
 
         if(!user){
             result.status = 404;
