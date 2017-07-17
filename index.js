@@ -33,6 +33,7 @@
         fs.ensureDirSync(constants.USER_UPLOAD_DIR);
         fs.ensureDirSync(constants.ARTIST_UPLOAD_DIR);
         fs.ensureDirSync(constants.ALBUM_UPLOAD_DIR);
+        fs.ensureDirSync(constants.SONG_UPLOAD_DIR);
     }
 
     function listenConnections() {

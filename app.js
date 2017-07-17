@@ -18,10 +18,12 @@ module.exports = (function () {
     var UserRoutes = require("./routes/user");
     var ArtistRoutes = require("./routes/artist");
     var AlbumRoutes = require("./routes/album");
+    var SongRoutes = require("./routes/song");
 
     app.use("/api", UserRoutes);
     app.use("/api", ArtistRoutes);
     app.use("/api", AlbumRoutes);
+    app.use("/api", SongRoutes);
 
     return app;
 })();
