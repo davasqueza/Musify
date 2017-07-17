@@ -222,7 +222,6 @@ module.exports = (function () {
     }
 
     function getImage(request, response) {
-        var result = {payload: {}};
         var imageFile = request.params.imageFile;
 
         request.checkParams("imageFile", "Parameter 'imageFile' is required").notEmpty();
@@ -234,14 +233,15 @@ module.exports = (function () {
         }
 
         var imagePath = path.resolve(constants.ALBUM_UPLOAD_DIR + imageFile);
-        var image = await(fs.exists(imagePath));
 
-        if (!image) {
-            result.status = 404;
-            result.payload.message = "Image not found";
-        }
-
-        response.status(200);
-        response.sendFile(imagePath);
+        fs.access(imagePath)
+            .then(function () {
+                response.status(200);
+                response.sendFile(imagePath);
+            })
+            .catch(function () {
+                response.status(404);
+                response.send({message: "Image not found"});
+            });
     }
 })();
