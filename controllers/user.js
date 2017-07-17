@@ -176,6 +176,7 @@ module.exports = (function () {
         }
         else{
             result.status = 200;
+            result.payload.image = fileName;
             result.payload.message = "User updated successfully";
         }
 
