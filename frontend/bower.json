@@ -1,0 +1,22 @@
+{
+  "name": "musify-frontend",
+  "description": "Aplicación de reproducción de música por streaming construida a partir del curso \"Desarrollo web con JavaScript, Angular, NodeJS y MongoDB\"",
+  "main": "",
+  "authors": [
+    "Diego Andres Vasquez Avila <davasqueza@unal.edu.co>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/davasqueza/Musify",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.2.1"
+  }
+}
