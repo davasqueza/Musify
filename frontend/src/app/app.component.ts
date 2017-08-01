@@ -36,6 +36,7 @@ export class AppComponent implements OnInit{
       else {
         localStorage.setItem("identity", JSON.stringify(this.identity));
         this.getToken(this.user);
+        this.user = new User("","","","","","ROLE_USER","");
       }
     };
 
