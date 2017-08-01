@@ -66,4 +66,11 @@ export class AppComponent implements OnInit{
 
     this._userService.signup(user, "true").subscribe(success.bind(this), error.bind(this));
   }
+
+  public logout(){
+    localStorage.removeItem("identity");
+    localStorage.removeItem("token");
+    this.identity = null;
+    this.token = null;
+  }
 }
