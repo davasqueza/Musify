@@ -10,12 +10,15 @@ import {User} from "./models/user";
 export class AppComponent implements OnInit{
   public title = 'Musify!';
   public user: User;
+  public userRegistered: User;
   public identity;
-  public token;
-  public errorMessage;
+  public token: string;
+  public loginFormMessage: string;
+  public registerFormMessage: string;
 
   constructor(private _userService:UserService){
     this.user = new User("","","","","","ROLE_USER","");
+    this.userRegistered = new User("","","","","","ROLE_USER","");
   }
 
   ngOnInit(){
@@ -23,7 +26,7 @@ export class AppComponent implements OnInit{
     this.token = this._userService.getToken();
   }
 
-  public onSubmit(){
+  public login(){
     let success = function (response) {
       this.identity = response.user;
 
@@ -39,7 +42,7 @@ export class AppComponent implements OnInit{
     let error = function (error) {
       let errorMessage = <any>error;
       if(errorMessage){
-        this.errorMessage = JSON.parse(errorMessage._body).message;
+        this.registerFormMessage = JSON.parse(errorMessage._body).message;
       }
     };
 
@@ -60,11 +63,32 @@ export class AppComponent implements OnInit{
     let error = function (error) {
       let errorMessage = <any>error;
       if(errorMessage){
-        this.errorMessage = JSON.parse(errorMessage._body).message;
+        this.loginFormMessage = JSON.parse(errorMessage._body).message;
       }
     };
 
     this._userService.signup(user, "true").subscribe(success.bind(this), error.bind(this));
+  }
+
+  public register(){
+    let success = function (response) {
+      if(!response.user._id) {
+        this.registerFormMessage = "Error en el registro";
+      }
+      else {
+        this.registerFormMessage = "Usuario registrado correctamente: " + response.user.name;
+        this.userRegistered = new User("","","","","","ROLE_USER","");
+      }
+    };
+
+    let error = function (error) {
+      let errorMessage = <any>error;
+      if(errorMessage){
+        this.registerFormMessage = JSON.parse(errorMessage._body).message;
+      }
+    };
+
+    this._userService.register(this.userRegistered).subscribe(success.bind(this), error.bind(this));
   }
 
   public logout(){
