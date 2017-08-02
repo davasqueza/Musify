@@ -107,6 +107,12 @@ module.exports = (function () {
         var params = request.body;
         var userID = request.params.id;
 
+        if(userID !== request.user.sub){
+            result.status = 403;
+            result.payload.message = "You are not authorized for edit another user different of yours own";
+            return result;
+        }
+
         if(_.isEmpty(params)){
             result.status = 400;
             result.payload.message = "Invalid request";
