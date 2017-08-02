@@ -36,6 +36,19 @@ export class UserService{
     return this._http.post(this.url+"saveUser", params, {headers})
       .map(function (data) {
         return data.json();
+      });
+  }
+
+  update(userToUpdate){
+    let params = JSON.stringify(userToUpdate);
+
+    let headers = new Headers({
+      "Content-Type": "application/json",
+      "Authorization": this.getToken()
+    });
+    return this._http.post(this.url+"updateUser/"+userToUpdate._id, params, {headers})
+      .map(function (data) {
+        return data.json();
       })
   }
 
