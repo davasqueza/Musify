@@ -46,7 +46,7 @@ export class UserService{
       "Content-Type": "application/json",
       "Authorization": this.getToken()
     });
-    return this._http.post(this.url+"updateUser/"+userToUpdate._id, params, {headers})
+    return this._http.put(this.url+"updateUser/"+userToUpdate._id, params, {headers})
       .map(function (data) {
         return data.json();
       })

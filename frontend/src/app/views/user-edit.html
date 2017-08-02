@@ -1,0 +1,27 @@
+<div class="col-lg-6" *ngIf="identity">
+  <h1>{{titulo}}</h1>
+
+  <div class="col-lg-6">
+    <div *ngIf="updateFormMessage" class="alert alert-info">
+      {{updateFormMessage}}
+    </div>
+    <form #updateForm="ngForm" (ngSubmit)="update()" class="col-md-10">
+      <p>
+        <label for="name">Nombre</label>
+        <input id="name" #name="ngModel" name="name" [(ngModel)]="user.name" class="form-control" required>
+        <span *ngIf="name.invalid && name.touched">El nombre es obligatorio</span>
+      </p>
+      <p>
+        <label for="surname">Apellido</label>
+        <input id="surname" #surname="ngModel" name="surname" [(ngModel)]="user.surname" class="form-control" required>
+        <span *ngIf="surname.invalid && surname.touched">El apellido es obligatorio</span>
+      </p>
+      <p>
+        <label for="regEmail">Correo electrónico</label>
+        <input type="email" id="regEmail" #regEmail="ngModel" name="regEmail" [(ngModel)]="user.email" class="form-control" required>
+        <span *ngIf="regEmail.invalid && regEmail.touched">El correo es obligatorio</span>
+      </p>
+      <input type="submit" value="Actualizar mis datos" class="btn btn-primary">
+    </form>
+  </div>
+</div>
