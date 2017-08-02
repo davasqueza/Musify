@@ -1,5 +1,6 @@
 import { Component, OnInit} from "@angular/core"
 
+import { AppService } from "../app.service"
 import { UserService } from "../services/user.service"
 import { User } from "../models/user"
 
@@ -16,7 +17,7 @@ export class UserEditComponent implements OnInit{
   public token;
   public updateFormMessage;
 
-  constructor(private _userService:UserService){
+  constructor(private _userService:UserService, private _appService:AppService){
     this.titulo = "Actualizar mis datos";
     this.identity = this._userService.getIdentity();
     this.token = this._userService.getToken();
@@ -31,6 +32,8 @@ export class UserEditComponent implements OnInit{
   update(){
     let success = function () {
       localStorage.setItem("identity", JSON.stringify(this.user));
+      this._appService.emitReloadUser();
+
       this.updateFormMessage = "El usuario se ha actualizado correctamente";
     };
 

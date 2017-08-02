@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from "./services/user.service";
+import { AppService } from "./app.service";
 import {User} from "./models/user";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  providers: [UserService]
+  providers: [UserService, AppService]
 })
 export class AppComponent implements OnInit{
   public title = 'Musify!';
@@ -16,9 +17,10 @@ export class AppComponent implements OnInit{
   public loginFormMessage: string;
   public registerFormMessage: string;
 
-  constructor(private _userService:UserService){
+  constructor(private _userService:UserService, private _appService:AppService){
     this.user = new User("","","","","","ROLE_USER","");
     this.userRegistered = new User("","","","","","ROLE_USER","");
+    this._appService.reloadUserData.subscribe(this.reloadUserData.bind(this))
   }
 
   ngOnInit(){
@@ -97,5 +99,10 @@ export class AppComponent implements OnInit{
     localStorage.removeItem("token");
     this.identity = null;
     this.token = null;
+  }
+
+  public reloadUserData(){
+    console.log("update data");
+    this.identity = this._userService.getIdentity();
   }
 }
