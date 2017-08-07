@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from "./services/user.service";
 import { AppService } from "./app.service";
-import {User} from "./models/user";
+import { User } from "./models/user";
+import { GLOBAL } from "./services/global";
 
 @Component({
   selector: 'app-root',
@@ -16,11 +17,13 @@ export class AppComponent implements OnInit{
   public token: string;
   public loginFormMessage: string;
   public registerFormMessage: string;
+  public url;
 
   constructor(private _userService:UserService, private _appService:AppService){
     this.user = new User("","","","","","ROLE_USER","");
     this.userRegistered = new User("","","","","","ROLE_USER","");
-    this._appService.reloadUserData.subscribe(this.reloadUserData.bind(this))
+    this._appService.reloadUserData.subscribe(this.reloadUserData.bind(this));
+    this.url = GLOBAL.url;
   }
 
   ngOnInit(){

@@ -36,17 +36,12 @@ export class UserEditComponent implements OnInit{
   update(){
     let success = function () {
       localStorage.setItem("identity", JSON.stringify(this.user));
-      this._appService.emitReloadUser();
-
       if(!this.filesToUpload){
-
+        this._appService.emitReloadUser();
       }
       else{
         this.makeFileRequest(this.url+"uploadUserImage/"+this.user._id, [], this.filesToUpload)
-          .then(function (result) {
-            this.user.image = result.image;
-            localStorage.setItem("identity", JSON.stringify(this.user));
-          }.bind(this));
+          .then(this.updateUserImage.bind(this));
       }
 
       this.updateFormMessage = "El usuario se ha actualizado correctamente";
@@ -59,6 +54,12 @@ export class UserEditComponent implements OnInit{
       }
     };
     this._userService.update(this.user).subscribe(success.bind(this), error.bind(this));
+  }
+
+  updateUserImage(result){
+    this.user.image = result.image;
+    localStorage.setItem("identity", JSON.stringify(this.user));
+    this._appService.emitReloadUser();
   }
 
   fileChangeEvent(fileInput){
