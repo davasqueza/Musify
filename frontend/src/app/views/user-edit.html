@@ -21,6 +21,16 @@
         <input type="email" id="regEmail" #regEmail="ngModel" name="regEmail" [(ngModel)]="user.email" class="form-control" required>
         <span *ngIf="regEmail.invalid && regEmail.touched">El correo es obligatorio</span>
       </p>
+
+      <div class="imageEdit" *ngIf="user.image && user.image !== 'null'">
+        <img src="{{url + 'getUserImage/' +user.image}}" width="300px" height="300px">
+      </div>
+
+      <p>
+        <label>Sube tu foto:</label>
+        <input type="file" (change)="fileChangeEvent($event)" placeholder="Subir imagen..." />
+      </p>
+
       <input type="submit" value="Actualizar mis datos" class="btn btn-primary">
     </form>
   </div>
