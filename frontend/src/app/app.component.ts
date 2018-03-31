@@ -48,7 +48,7 @@ export class AppComponent implements OnInit{
     let error = function (error) {
       let errorMessage = <any>error;
       if(errorMessage){
-        this.registerFormMessage = JSON.parse(errorMessage._body).message;
+        this.loginFormMessage = JSON.parse(errorMessage._body).message;
       }
     };
 
