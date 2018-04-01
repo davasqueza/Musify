@@ -4,11 +4,12 @@ import { AppService } from "../app.service"
 import { UserService } from "../services/user.service"
 import { User } from "../models/user"
 import { GLOBAL } from "../services/global"
+import {UploadService} from "../services/upload.service";
 
 @Component({
   selector: "user-edit",
   templateUrl: "../views/user-edit.html",
-  providers: [UserService]
+  providers: [UserService, UploadService]
 })
 
 export class UserEditComponent implements OnInit{
@@ -20,7 +21,7 @@ export class UserEditComponent implements OnInit{
   public filesToUpload: Array<File>;
   public url: string;
 
-  constructor(private _userService:UserService, private _appService:AppService){
+  constructor(private _userService:UserService, private _appService:AppService, private _uploadService: UploadService){
     this.titulo = "Actualizar mis datos";
     this.identity = this._userService.getIdentity();
     this.token = this._userService.getToken();
@@ -40,7 +41,7 @@ export class UserEditComponent implements OnInit{
         this._appService.emitReloadUser();
       }
       else{
-        this.makeFileRequest(this.url+"uploadUserImage/"+this.user._id, [], this.filesToUpload)
+        this._uploadService.makeFileRequest(this.url + "uploadUserImage/"+this.user._id, this.filesToUpload, this.token, "image")
           .then(this.updateUserImage.bind(this));
       }
 
@@ -64,30 +65,5 @@ export class UserEditComponent implements OnInit{
 
   fileChangeEvent(fileInput){
     this.filesToUpload = <Array<File>>fileInput.target.files;
-  }
-
-  makeFileRequest(url: string, params: Array<string>, files: Array<File>){
-    let token = this.token;
-    return new Promise(function (resolve, reject) {
-      let formData = new FormData();
-      let xhr = new XMLHttpRequest();
-
-      for(let i = 0; i<files.length; i++){
-        formData.append("image", files[i], files[i].name);
-        xhr.onreadystatechange = function () {
-          if(xhr.readyState === 4){
-            if(xhr.status === 200){
-              resolve(JSON.parse(xhr.response));
-            }
-            else {
-              reject(xhr.response);
-            }
-          }
-        };
-        xhr.open("POST", url, true);
-        xhr.setRequestHeader("Authorization", token);
-        xhr.send(formData);
-      }
-    });
   }
 }
