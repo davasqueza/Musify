@@ -71,3 +71,37 @@ html, body {
 .artistImage img{
   width: 150px;
 }
+
+.artists-list{
+  padding: 0;
+  margin: 30px 0 0;
+  list-style: none;
+}
+
+.artistItem{
+  padding: 0 !important;
+  height: 317px;
+  border: 1px solid #444;
+  margin: 0 20px;
+}
+
+.artistItem .artistImage{
+  height: 245px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.artistItem .artistImage img{
+  width: 100%;
+  min-height: 100%;
+}
+
+.artistItem .artistName{
+  color: white;
+  padding: 10px;
+  background: #222326;
+}
+
+.artistItem .artistName a{
+  color: white;
+}
