@@ -9,8 +9,11 @@ import { ArtistListComponent } from "./components/artist-list.component"
 import { HomeComponent } from "./components/home.component"
 import { ArtistAddComponent} from "./components/artist-add.component"
 import { ArtistEditComponent } from "./components/artist-edit.component"
+import { IsAdminGuard } from "./guards/auth.guard"
 
 import { routing, appRoutingProviders } from "./app.routing"
+import {UserService} from "./services/user.service";
+import {ForbiddenComponent} from "./components/forbidden.component";
 
 @NgModule({
   declarations: [
@@ -19,7 +22,8 @@ import { routing, appRoutingProviders } from "./app.routing"
     ArtistListComponent,
     HomeComponent,
     ArtistAddComponent,
-    ArtistEditComponent
+    ArtistEditComponent,
+    ForbiddenComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +31,11 @@ import { routing, appRoutingProviders } from "./app.routing"
     HttpModule,
     routing
   ],
-  providers: [appRoutingProviders],
+  providers: [
+    appRoutingProviders,
+    IsAdminGuard,
+    UserService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

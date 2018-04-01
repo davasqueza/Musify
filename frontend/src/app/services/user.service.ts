@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Http, Response, Headers } from "@angular/http";
+import { Http, Headers } from "@angular/http";
 import "rxjs/add/operator/map";
-import { Observable } from "rxjs/Observable";
 import { GLOBAL } from "./global";
 
 @Injectable()
@@ -62,5 +61,10 @@ export class UserService{
     let token = localStorage.getItem("token");
     this.token = token ? token : null;
     return token;
+  }
+
+  isAdmin(){
+    let identity = this.getIdentity();
+    return identity && identity.role === 'ROLE_ADMIN';
   }
 }
