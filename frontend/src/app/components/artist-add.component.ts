@@ -40,7 +40,7 @@ export class ArtistAddComponent implements  OnInit {
       }
       else {
         this.artist = response.artist;
-        this._router.navigate(["/editar-artista"], response.artist._id);
+        this._router.navigate(["/editar-artista", response.artist._id]);
 
         this.addArtistFormMessage = "Artista creado con éxito";
       }
