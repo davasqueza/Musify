@@ -17,7 +17,7 @@
       <img src="{{url + 'getArtistImage/' + artist.image}}">
     </div>
     <div class="artistName">
-      <a href="#">
+      <a [routerLink]="['/artista', artist._id]">
         {{artist.name}}
       </a>
 

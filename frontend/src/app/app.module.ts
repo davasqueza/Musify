@@ -14,6 +14,7 @@ import { IsAdminGuard } from "./guards/auth.guard"
 import { routing, appRoutingProviders } from "./app.routing"
 import {UserService} from "./services/user.service";
 import {ForbiddenComponent} from "./components/forbidden.component";
+import {ArtistDetailComponent} from "./components/artist-detail.component";
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {ForbiddenComponent} from "./components/forbidden.component";
     HomeComponent,
     ArtistAddComponent,
     ArtistEditComponent,
-    ForbiddenComponent
+    ForbiddenComponent,
+    ArtistDetailComponent
   ],
   imports: [
     BrowserModule,

@@ -9,6 +9,11 @@ html, body {
   padding-bottom: 4px;
 }
 
+.central{
+  height: 100%;
+  overflow-y: scroll;
+}
+
 .head-title{
   font-size: 20px;
   font-weight: bold;
@@ -104,4 +109,16 @@ html, body {
 
 .artistItem .artistName a{
   color: white;
+}
+
+#artist-head-card .artist{
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  float: left;
+  margin-right: 30px;
+}
+
+#artist-head-card .artist img{
+  height: 130px;
 }
