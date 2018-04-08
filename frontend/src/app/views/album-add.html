@@ -1,0 +1,34 @@
+<div class="col-lg-6">
+  <h1>{{titulo}}</h1>
+  <form #formAlbum="ngForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="addFormMessage" class="alert alert-info">
+      {{addFormMessage}}
+    </div>
+    <p>
+      <label>Nombre</label>
+      <input #title="ngModel" name="title" title="Título" class="form-control" [(ngModel)]="album.title" required>
+      <span *ngIf="!title.valid && title.touched">
+        El título es obligatorio
+      </span>
+    </p>
+
+    <p>
+      <label>Año</label>
+      <textarea #year="ngModel" name="year" title="Año" class="form-control" [(ngModel)]="album.year" required></textarea>
+      <span *ngIf="!year.valid && year.touched">
+        El año es obligatorio
+      </span>
+    </p>
+
+    <p>
+      <label>Descripción</label>
+      <textarea #description="ngModel" name="description" title="Descripción" class="form-control" [(ngModel)]="album.description" required></textarea>
+      <span *ngIf="!description.valid && description.touched">
+        La descripción es obligatorio
+      </span>
+    </p>
+
+    <input type="submit" value="{{titulo}}" class="btn btn-success" [disabled]="!formAlbum.form.valid">
+  </form>
+</div>
+

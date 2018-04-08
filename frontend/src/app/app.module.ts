@@ -15,6 +15,8 @@ import { routing, appRoutingProviders } from "./app.routing"
 import {UserService} from "./services/user.service";
 import {ForbiddenComponent} from "./components/forbidden.component";
 import {ArtistDetailComponent} from "./components/artist-detail.component";
+import {AlbumAddComponent} from "./components/album-add.component";
+import {AlbumService} from "./services/album.service";
 
 @NgModule({
   declarations: [
@@ -25,7 +27,8 @@ import {ArtistDetailComponent} from "./components/artist-detail.component";
     ArtistAddComponent,
     ArtistEditComponent,
     ForbiddenComponent,
-    ArtistDetailComponent
+    ArtistDetailComponent,
+    AlbumAddComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +39,8 @@ import {ArtistDetailComponent} from "./components/artist-detail.component";
   providers: [
     appRoutingProviders,
     IsAdminGuard,
-    UserService
+    UserService,
+    AlbumService
   ],
   bootstrap: [AppComponent]
 })

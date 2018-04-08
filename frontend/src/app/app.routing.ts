@@ -9,6 +9,7 @@ import { ArtistEditComponent } from "./components/artist-edit.component"
 import {IsAdminGuard} from "./guards/auth.guard";
 import {ForbiddenComponent} from "./components/forbidden.component";
 import {ArtistDetailComponent} from "./components/artist-detail.component";
+import {AlbumAddComponent} from "./components/album-add.component";
 
 const appRoutes: Routes = [
   {path: "", component: HomeComponent},
@@ -18,6 +19,7 @@ const appRoutes: Routes = [
   {path: "mis-datos", component: UserEditComponent},
   {path: "artista/:id", component: ArtistDetailComponent},
   {path: "prohibido", component: ForbiddenComponent},
+  {path: "crear-album/:id", component: AlbumAddComponent},
   {path: "**", component: HomeComponent}
 ];
 
