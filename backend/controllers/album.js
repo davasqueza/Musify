@@ -103,6 +103,7 @@ module.exports = (function () {
         album.description = params.description;
         album.year = params.year;
         album.artist = params.artist;
+        album.title = params.title;
         album.image = "null";
 
         var albumStored = await(album.save());
