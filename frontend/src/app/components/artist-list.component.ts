@@ -21,6 +21,8 @@ export class ArtistListComponent implements  OnInit {
   public next_page;
   public prev_page;
   public isAdmin;
+  public listArtistMessage;
+  public showDeleteSection;
 
   constructor(private _route: ActivatedRoute, private _userService: UserService, private _artistService: ArtistService){
     this.titulo = "Artistas";
@@ -61,11 +63,30 @@ export class ArtistListComponent implements  OnInit {
       let error = function (error) {
         let errorMessage = <any>error;
         if(errorMessage){
-          this.editArtistFormMessage = JSON.parse(errorMessage._body).message;
+          this.listArtistMessage = JSON.parse(errorMessage._body).message;
         }
       };
 
       this._artistService.getArtists(this.token, page).subscribe(success.bind(this), error.bind(this));
     }.bind(this));
+  }
+
+  onDeleteConfirm(id){
+    this.showDeleteSection = id;
+  }
+
+  onCancel(){
+    this.showDeleteSection = null;
+  }
+
+  onDeleteArtist(id){
+    let error = function (error) {
+      let errorMessage = <any>error;
+      if(errorMessage){
+        this.listArtistMessage = JSON.parse(errorMessage._body).message;
+      }
+    };
+
+    this._artistService.deleteArtistById(this.token, id).subscribe(this.getArtists.bind(this), error.bind(this));
   }
 }
