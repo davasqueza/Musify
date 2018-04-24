@@ -1,5 +1,5 @@
 import { Component, OnInit} from "@angular/core"
-import {ActivatedRoute, Params} from "@angular/router"
+import {ActivatedRoute, Params, Router} from "@angular/router"
 
 import { GLOBAL } from "../services/global"
 import { UserService } from "../services/user.service"
@@ -20,7 +20,8 @@ export class AlbumAddComponent implements  OnInit {
   public url: string;
   public addFormMessage;
 
-  constructor(private _route: ActivatedRoute, private _userService: UserService, private _albumService: AlbumService) {
+  constructor(private _route: ActivatedRoute, private _userService: UserService, private _albumService: AlbumService,
+              private _router: Router) {
     this.titulo = "Crear nuevo album";
     this.identity = this._userService.getIdentity();
     this.token = this._userService.getToken();

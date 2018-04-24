@@ -17,6 +17,7 @@ import {ForbiddenComponent} from "./components/forbidden.component";
 import {ArtistDetailComponent} from "./components/artist-detail.component";
 import {AlbumAddComponent} from "./components/album-add.component";
 import {AlbumService} from "./services/album.service";
+import {AlbumEditComponent} from "./components/album-edit.component";
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {AlbumService} from "./services/album.service";
     ArtistEditComponent,
     ForbiddenComponent,
     ArtistDetailComponent,
-    AlbumAddComponent
+    AlbumAddComponent,
+    AlbumEditComponent
   ],
   imports: [
     BrowserModule,
